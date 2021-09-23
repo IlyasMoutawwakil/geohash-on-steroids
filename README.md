@@ -20,6 +20,17 @@ nb_point_decode(geohash)
 # Output: 4.48 µs ± 16.8 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
 ```
 
+```python
+%%timeit
+point_encode(latitude, longitude)
+# Output: 92.8 µs ± 2.37 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+```
+
+```python
+%%timeit
+nb_point_encode(latitude, longitude)
+# Output: 11.2 µs ± 663 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+```
 But geohashing is generally performaded on large amounts of data points so I made a vector-wise implimentation that perform well at large scale:
 
 ```python
@@ -34,9 +45,20 @@ nb_vector_decode(geohashes)
 # Output: 164 ms ± 1.66 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 ```
 
+```python
+%%timeit
+np_vector_encode(latitudes, longitudes)
+# Output: 2.57 s ± 53.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+```
+
+```python
+%%timeit
+nb_vector_encode(latitudes, longitudes)
+# Output: 443 ms ± 12.7 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+```
 ## Roadmap
-- [ ] Use Numba for computing efficient geohash encoding and decoding
+- [x] Use Numba for computing efficient geohash encoding and decoding
 - [x] Use Numba for computing efficient geohash decoding
-- [ ] Use Numba for vector-wize computing efficient geohash encoding
+- [x] Use Numba for vector-wize computing efficient geohash encoding
 - [x] Use Numba for vector-wize computing efficient geohash decoding
-- [ ] Parallelize computations efficiently (no loops)
+- [ ] Parallelize computations efficiently (one loop? no loops?)
