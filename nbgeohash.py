@@ -1,9 +1,11 @@
 import numpy as np
-# import numba as nb
+import numba as nb
 from numba import njit, types
 from math import log10
 
-@njit(fastmath=True)
+
+
+@njit(cache=True, fastmath=True)
 def base32_to_int(s: types.char) -> types.uint8:
     """
     Returns the equivalent value of a base 32 character.
@@ -28,10 +30,11 @@ def nb_decode_exactly(geohash: types.string) -> types.Tuple:
 
     lat_interval_neg, lat_interval_pos, lon_interval_neg, lon_interval_pos = -90, 90, -180, 180
     lat_err, lon_err = 90, 180
+    masks = np.array([16, 8, 4, 2, 1])
     is_even = True
     for c in geohash:
         cd = base32_to_int(c)
-        for mask in (16, 8, 4, 2, 1):
+        for mask in masks:
             if is_even:  # adds longitude info
                 lon_err /= 2
                 if cd & mask:
@@ -86,3 +89,47 @@ def nb_vector_decode(geohashes: types.Array) -> types.Tuple:
         lons[i] = round(lon, lon_dec)
 
     return lats, lons
+
+@njit(fastmath=True)
+def nb_point_encode(latitude: types.float64, longitude: types.float64, precision: types.int8 = 12) -> types.string:
+    base32 = '0123456789bcdefghjkmnpqrstuvwxyz'
+    lat_interval_neg, lat_interval_pos, lon_interval_neg, lon_interval_pos = -90, 90, -180, 180
+    geohash = np.zeros(precision, dtype='<U1')
+    bits = np.array([16, 8, 4, 2, 1])
+    bit = 0
+    ch = 0
+    n = 0
+    even = True
+    while n < precision:
+        mid = (lon_interval_neg + lon_interval_pos) / 2
+        if even:
+            if longitude > mid:
+                ch |= bits[bit]
+                lon_interval_neg = mid
+            else:
+                lon_interval_pos = mid
+        else:
+            if latitude > mid:
+                ch |= bits[bit]
+                lat_interval_neg = mid
+            else:
+                lat_interval_pos = mid
+        even = not even
+        
+        if bit < 4:
+            bit += 1
+        else: 
+            geohash[n] = base32[ch]
+            bit = 0
+            ch = 0
+            n += 1
+            
+    return ''.join(geohash)
+
+@njit(fastmath=True, parallel=True)
+def nb_vector_encode(latitudes: types.Array, longitudes: types.Array, precision: types.int8 = 12) -> types.Array:
+    n = len(latitudes)
+    geohashes = np.empty(n, dtype='<U12')
+    for i in range(n):
+        geohashes[i] = nb_point_encode(latitudes[i], longitudes[i], precision)
+    return geohashes
