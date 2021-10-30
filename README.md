@@ -1,6 +1,6 @@
 # geohash-on-steroids
 I'm making this repository for geohashing enthusiasts who want to encode and decode geohashes in the most python-optimized way.
-For now, I've only implemented decoding functions since they're what I struggled with the most in my internship but I'll beexperiùenting ùore and adding more fuctionalities very soon.
+I'll be experimenting more and adding more fuctionalities very soon.
 
 ## Dependencies
 Optimized functions are created with the `njit` decorators and using arrays so the only dependencies are [Numba](https://github.com/numba/numba) and [Numpy](https://github.com/numpy/numpy).
