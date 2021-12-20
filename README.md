@@ -4,6 +4,7 @@ I'll be experimenting more and adding more fuctionalities very soon.
 
 ## Dependencies
 Optimized functions are created with the `njit` decorators and using arrays so the only dependencies are [Numba](https://github.com/numba/numba) and [Numpy](https://github.com/numpy/numpy).
+You can install them using pip in any python environment: `pip install numpy numba`
 
 ## Performance
 As you can see in my [notebook](https://github.com/IlyasMoutawwakil/geohash-on-steroids/blob/main/performance_tests.ipynb), performance gain in comparison to what's on the python package [pygeohash](https://github.com/wdm0006/pygeohash) is the following:
