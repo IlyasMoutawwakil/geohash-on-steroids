@@ -31,8 +31,8 @@ point_encode(latitude, longitude)
 ```
 
 ```python
-%%timeit
 # Numba function
+%%timeit
 nb_point_encode(latitude, longitude)
 # Output: 11.2 µs ± 663 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
 ```
