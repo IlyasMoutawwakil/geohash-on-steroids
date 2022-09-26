@@ -10,18 +10,21 @@ You can install them using pip in any python environment: `pip install numpy num
 As you can see in my [notebook](https://github.com/IlyasMoutawwakil/geohash-on-steroids/blob/main/performance_tests.ipynb), performance gain in comparison to what's on the python package [pygeohash](https://github.com/wdm0006/pygeohash) is the following:
 
 ```python
+# PyGeoHash function
 %%timeit
 point_decode(geohash)
 # Output: 20.4 µs ± 367 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
 ```
 
 ```python
+# Numba function
 %%timeit
 nb_point_decode(geohash)
 # Output: 4.48 µs ± 16.8 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
 ```
 
 ```python
+# PyGeoHash function
 %%timeit
 point_encode(latitude, longitude)
 # Output: 92.8 µs ± 2.37 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
@@ -29,30 +32,35 @@ point_encode(latitude, longitude)
 
 ```python
 %%timeit
+# Numba function
 nb_point_encode(latitude, longitude)
 # Output: 11.2 µs ± 663 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
 ```
-But geohashing is generally performaded on large amounts of data points so I made a vector-wise implimentation that perform well at large scale:
+But geohashing is generally performaded on large amounts of data points so I made a vector-wise implimentation that performs even better at larger scale:
 
 ```python
+# Numpy vectorization function
 %%timeit
 np_vector_decode(geohashes)
 # Output: 2.09 s ± 25.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 ```
 
 ```python
+# Numba vectorization function
 %%timeit
 nb_vector_decode(geohashes)
 # Output: 164 ms ± 1.66 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 ```
 
 ```python
+# Numpy vectorization function
 %%timeit
 np_vector_encode(latitudes, longitudes)
 # Output: 2.57 s ± 53.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 ```
 
 ```python
+# Numba vectorization function
 %%timeit
 nb_vector_encode(latitudes, longitudes)
 # Output: 443 ms ± 12.7 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
